@@ -120,23 +120,23 @@ output:
     # >> Output directory of the customized image (REQUIRED):
     local: output_directory
     # >> Information used by Toradex Easy Installer:
-    name: "My submodule --depth1 image"
-    description: "This is a truly wonderful image\nYou will see this in the 2nd line
-    and also this will be in the same second line\n
-    but this will not and it will be in the 3rd line."
+    name: "The PSCG Torizon - showing plymouth in rootfs booting to a \"Broken TV\" docker "
+    description: "Demonstration of Torizon containers, using a trivial container, with at noricable visibility.\n
+                  The image disables plymouth in initramfs due to a known bug, and enables it later in the target operational rootfs.\n
+                  This demonstrates the use of a bundled docker-compose in torizon-core-builder"
     # licence: files/custom-licence.html
     # release-notes: files/custom-release-notes.html
     # accept-licence: true
     # autoinstall: true
     # autoreboot: true
-    # bundle:
+    bundle:
       # >> Choose one of the options:
       # >> (1) Specify a docker-compose file whose referenced images will be downloaded.
       # >>     Properties platform, username, password, registry, ca-certificate and
       # >>     keep-double-dollar-sign are optional.
       # >>     When using a docker-compose file all config values with '$$' will be replaced
       # >>     by '$', unless keep-double-dollar-sign is set to true.
-      # compose-file: files/docker-compose.yml
+      compose-file: containers/docker-compose/docker-compose.trivial-brokentv.yml
       # platform: linux/arm/v7
       # username: "${USERNAME}"
       # password: "${PASSWORD}"

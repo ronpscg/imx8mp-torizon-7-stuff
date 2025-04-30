@@ -1,0 +1,10 @@
+#
+# This example demonstrates a very simple docker-compose file, that uses the fact that the Torizon images (as per the time of writing) come with CONFIG_DRM_FBDEV_EMULATION=y
+# and so if /dev/fb0 is exposed, it can be directly drawn to. 
+# Obviously much less can be exposed, but privileged is just shorter to write. You will see other docker-compose files that are more strict about what they expose
+services:
+  brokentv:
+    image: busybox
+    privileged: true
+    entrypoint: sh -c "while true ; do cat /dev/urandom > /dev/fb0 ; done"
+
