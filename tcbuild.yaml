@@ -41,7 +41,7 @@ input:
 # >> the desired output image.
 customization:
   # >> Splash screen:
-  splash-screen: pscg__1280x800__light-green.png
+  splash-screen: assets/pscg__1280x800__light-green.png
   # >> Directories overlayed to the base OSTree
   # filesystem:
      # - changes/
