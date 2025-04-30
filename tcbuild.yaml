@@ -120,8 +120,10 @@ output:
     # >> Output directory of the customized image (REQUIRED):
     local: output_directory
     # >> Information used by Toradex Easy Installer:
-    # name: "My customized image"
-    # description: "My customized image (description)"
+    name: "My submodule --depth1 image"
+    description: "This is a truly wonderful image\nYou will see this in the 2nd line
+    and also this will be in the same second line\n
+    but this will not and it will be in the 3rd line."
     # licence: files/custom-licence.html
     # release-notes: files/custom-release-notes.html
     # accept-licence: true
