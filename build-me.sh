@@ -46,6 +46,10 @@ if torizoncore-builder build ; then
 	echo
 	echo "You may copy $outdir to your relevant server or installation media"
 	echo -e "You may also update  image_list.json and run \x1b[34mtorizoncore-builder images serve .\x1b[0m after sourcing tcb-env-setup.sh"
+
+	if [ "$TCB_SERVE_IMAGE" = "true" ] ; then
+		torizoncore-builder images serve .
+	fi
 else
 	echo -e "\x1b[31mBuild Failed.\x1b[0m"
 	exit 1
