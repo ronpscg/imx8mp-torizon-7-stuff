@@ -1,0 +1,6 @@
+{
+    "config_format": 1,
+    "images": [
+        "output_directory/image.json"
+    ]
+}

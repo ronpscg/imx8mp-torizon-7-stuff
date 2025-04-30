@@ -1,0 +1,7 @@
+[submodule "device-trees"]
+	path = device-trees
+	url = git://git.toradex.com/device-tree-overlays.git
+[submodule "linux"]
+	path = linux
+	url = git://git.toradex.com/linux-toradex.git
+	branch = toradex_6.6-2.2.x-imx
