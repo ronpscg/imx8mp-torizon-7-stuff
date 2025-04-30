@@ -120,8 +120,8 @@ output:
     # >> Output directory of the customized image (REQUIRED):
     local: output_directory
     # >> Information used by Toradex Easy Installer:
-    name: "The PSCG Torizon - showing plymouth in rootfs booting to a \"Broken TV\" docker "
-    description: "Demonstration of Torizon containers, using a trivial container, with at noricable visibility.\n
+    name: "The PSCG Torizon - showing plymouth in rootfs booting to a weston+chromium kiosk docker chain"
+    description: "Demonstration of Torizon containers, using Torizon provided dockers, that boot to a thepscg.com website chromium kiosk device.\n
                   The image disables plymouth in initramfs due to a known bug, and enables it later in the target operational rootfs.\n
                   This demonstrates the use of a bundled docker-compose in torizon-core-builder"
     # licence: files/custom-licence.html
@@ -136,7 +136,7 @@ output:
       # >>     keep-double-dollar-sign are optional.
       # >>     When using a docker-compose file all config values with '$$' will be replaced
       # >>     by '$', unless keep-double-dollar-sign is set to true.
-      compose-file: containers/docker-compose/docker-compose.trivial-brokentv.yml
+      compose-file: containers/docker-compose/docker-compose.chromium-kiosk.yml
       # platform: linux/arm/v7
       # username: "${USERNAME}"
       # password: "${PASSWORD}"

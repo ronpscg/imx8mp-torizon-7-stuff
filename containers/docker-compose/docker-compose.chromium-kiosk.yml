@@ -1,0 +1,123 @@
+services:
+  weston:
+    image: torizon/weston-imx8:4
+    # EULA required to run imx8 vivante graphic drivers
+    # Pre-accept as we ask the user accept the EULA already.
+    environment:
+      - ACCEPT_FSL_EULA=1
+      - HEAD=LVDS-1
+    # Required to get udev events from host udevd via netlink
+    network_mode: host
+    volumes:
+      - type: bind
+        source: /tmp
+        target: /tmp
+      - type: bind
+        source: /dev
+        target: /dev
+      - type: bind
+        source: /run/udev
+        target: /run/udev
+    cap_add:
+      - CAP_SYS_TTY_CONFIG
+    # Add device access rights through cgroup...
+    device_cgroup_rules:
+      # ... for tty0
+      - 'c 4:0 rmw'
+      # ... for tty1
+      - 'c 4:1 rmw'
+      # ... for tty7
+      - 'c 4:7 rmw'
+      # ... for /dev/input devices
+      - 'c 13:* rmw'
+      # ... for /dev/dri devices
+      - 'c 226:* rmw'
+      # ... for /dev/galcore device
+      - 'c 199:0 rmw'
+      # ... for /dev/dma_heap device
+      - 'c 253:* rmw'
+      # For uinput
+      - 'c 10:253 rmw'
+
+   # I copied from the Debian container, perhaps not all things are needed. This is a first shot.
+   # Later I will a docker file that will add some things with FROM - not necessarily to this container
+   # I have no idea what the credentials are to this container, however, one can `docker exec -it -u root <container-name> bash` to get a root shell and install more packages
+   # HEAD=LVDS-1 is for the weston-calibrator
+  chromium:
+    image: torizon/chromium-imx8:4
+    restart: unless-stopped
+    volumes:
+      - /tmp:/tmp
+      - /var/run/dbus:/var/run/dbus
+      - /dev:/dev 
+      - /dev/galcore:/dev/galcore
+    device_cgroup_rules:
+      # video
+      - 'c 81:* rmw'
+      # galcore
+      - 'c 199:* rmw'
+      # dri
+      - 'c 226:* rmw'
+      # Don't know if I saw it on iMX8
+      - 'c 234:* rmw'
+      # Don't know if I saw it on iMX8
+      - 'c 235:* rmw'
+      # /dev/dma_heap/...
+      - 'c 253:* rmw'
+    security_opt:
+      - seccomp=unconfined # Use with caution
+    shm_size: 512mb
+    command: --virtual-keyboard https://www.thepscg.com/training/android-internals
+
+  #
+  # touch-calibrator example
+  # It runs the weston-calibrator and then stays at weston
+  # The HEAD environment variable is important here, and should represent the respective DRM connector
+  #
+  touch-calibrator:
+    # Does not seem to support hardware acceleration - but we could figure it out / install the relevant ones, if needed, in weston
+    profiles:
+      - donotstart
+    image: torizon/weston-touch-calibrator:4
+    # EULA required to run imx8 vivante graphic drivers
+    # Pre-accept as we ask the user accept the EULA already.
+    environment:
+      - ACCEPT_FSL_EULA=1
+      - HEAD=LVDS-1
+    # Required to get udev events from host udevd via netlink
+    network_mode: host
+    volumes:
+      - type: bind
+        source: /tmp
+        target: /tmp
+      - type: bind
+        source: /dev
+        target: /dev
+      - type: bind
+        source: /run/udev
+        target: /run/udev
+    cap_add:
+      - CAP_SYS_TTY_CONFIG
+    # Add device access rights through cgroup...
+    device_cgroup_rules:
+      # ... for tty0
+      - 'c 4:0 rmw'
+      # ... for tty1
+      - 'c 4:1 rmw'
+      # ... for tty7
+      - 'c 4:7 rmw'
+      # ... for /dev/input devices
+      - 'c 13:* rmw'
+      # ... for /dev/dri devices
+      - 'c 226:* rmw'
+      # ... for /dev/galcore device
+      - 'c 199:0 rmw'
+      # ... for /dev/dma_heap device
+      - 'c 253:* rmw'
+      # For uinput
+      - 'c 10:253 rmw'
+
+# GPU example
+#docker run --rm -d -v /tmp:/tmp -v /var/run/dbus:/var/run/dbus            -v /dev:/dev -v /dev/galcore:/dev/galcore            --device-cgroup-rule='c 81:* rmw' --device-cgroup-rule='c 199:* rmw'            --device-cgroup-rule='c 226:* rmw' --device-cgroup-rule='c 234:* rmw'            --device-cgroup-rule='c 235:* rmw' --device-cgroup-rule='c 253:* rmw'            --security-opt seccomp=unconfined --shm-size 512mb            torizon/chromium-imx8:4 --virtual-keyboard https://www.thepscg.com/
+# No GPU example
+# docker run -eMACHINE -d --rm --name=chromium     -v /tmp:/tmp -v /var/run/dbus:/var/run/dbus     -v /dev/galcore:/dev/galcore --device-cgroup-rule='c 199:* rmw'     --security-opt seccomp=unconfined --shm-size 256mb     torizon/chromium:$CT_TAG_CHROMIUM --disable-gpu --virtual-keyboard https://www.thepscg.com
