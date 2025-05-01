@@ -7,11 +7,6 @@
 # TCB cannot work from inside a script
 #
 
-if [ ! $(md5sum tcb-env-setup-inscript.sh | cut -f 1 -d' ')  = c221a64ee0b17d0eb67d18ccd2db92fb ] ; then
-	echo -e "\x1b[31mThis example script uses a slightly modified tcb-env-setup.sh script. If it is not the same script you will not be able to use it, so please double check\x1b[0m"
-	exit 1
-fi
-
 if [ "$#" -lt "1" ] ; then
 	echo "Please provide your output directory as a parameter"
 	exit 1
@@ -30,7 +25,8 @@ else
 	exit 1
 fi
 
-. tcb-env-setup-inscript.sh -a local # May ask you to update your dockers, so you may want to first source tcv-env-setup.sh from out of this, or use -a remote (or -t <something>...)
+shopt -s expand_aliases
+. tcb-env-setup.sh -a local # May ask you to update your dockers, so you may want to first source tcv-env-setup.sh from out of this, or use -a remote (or -t <something>...)
 
 
 echo -e "\x1b[32mStarting to build...\x1b[0m"
