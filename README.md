@@ -75,6 +75,10 @@ Then, on the very first time you would want to create `tcbuild.yaml` by running
 torizoncore-builder build --create-template
 ```
 
+You could alternatively use another template, and some example templates are provided for you in the `tcbuild-templates/` folder. You can, e.g., either:
+- Copy or link one of the templates there into the `tcbuild.yml` file before invoking `torizoncore-builder build`
+- Invoke `torizoncore-builder build --file <your-file-name.yml>`
+
 Then, the next steps would be
 - Getting the kernel source tree, and the device tree (see the Setup sections above)
 - Adding the customizations in the `tcbuild.yaml`
@@ -94,6 +98,28 @@ Therefore my quick suggestion, is to:
 Then you can use the folder in `output_directory` as the TEZI installer input for your image.
 
 Disclaimer: I don't work for Toradex, and I have never worked for Toradex, there might and there should be better solutions for everything I propose.
+
+## Building offline
+This is fully explained in [this short video](https://www.youtube.com/watch?v=_d6O4ZCholk&list=PLBaH8x4hthVysdRTOlg2_8hL6CWCnN5l-&index=79]).
+
+Assume the docker-compose.chromium-kiosk.yml example, and a particular torizon version, either from Toradex, or build with the Yocto Project.
+The cache materials can be added as follows:
+```
+torizoncore-builder bundle --platform linux/arm64 containers/docker-compose/docker-compose.chromium-kiosk.yml ^C
+(reverse-i-search)`wget': wget https://tezi.toradex.com/artifactory/torizoncore-oe-prerelease-frankfurt/scarthgap-7.x.y/nightly/209/verdin-imx8mp/torizon/torizon-docker/oedeploy/torizon-docker-verdin-imx8mp-Tezi_7.3.0-devel-20250429+build.209.tar
+```
+
+Then you can of course move them to a folder of your own, and make sure your `tcbuild.yml` file points to the right places.
+For example:
+```
+mkdir caches_dir
+mv torizon-docker*.tar bundle caches_dir
+```
+
+An example template file is available, and you can build it (as in the video) using
+```
+torizoncore-builder build --file tcbuild-templates/tcbuild.offline.containers_dtbs_kernelcmdline.yaml
+```
 
 
 ## Deploying the image
