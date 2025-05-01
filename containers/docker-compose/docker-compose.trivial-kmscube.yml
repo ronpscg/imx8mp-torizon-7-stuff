@@ -1,0 +1,18 @@
+#
+# This container runs kmscube using OpenGLES and not requiring any display server (X, wayland).
+# There would be an equivalent example with Vulkan, but unfortunately it is not supported and it is up to NXP to take care of that
+#
+services:
+  kmscube:
+    image: torizon/graphics-tests-imx8:stable-rc
+    entrypoint: kmscube
+    privileged: true
+    tty: true
+    device_cgroup_rules:
+    - c 81:* rmw
+    - c 199:* rmw
+    - c 226:* rmw
+    - c 234:* rmw
+    - c 235:* rmw
+    - c 253:* rmw
+    restart: unless-stopped
