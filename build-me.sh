@@ -6,6 +6,22 @@
 # OK it took 5. TCB asks the user to update if it is different than what is upstream, so I used a copy. The reason for modifying it in the first place is that 
 # TCB cannot work from inside a script
 #
+# Usage:
+# $1 is the output directory. 
+# TCBUILD_YAML is an environment variable that should point to your respective tcbuild.yaml file. It can have any name of your choice.
+# It is recommended to start from a template, copy it over, and not checkin the file you work on to source control
+#
+# The file is *deliberately* not too robust to keep it short and sweet, and the only real change is modifying the output directory.
+# It's easiest to just keep the outputd directory as output_directory , and move out the target folders, as it lines up nicely and at this point I don't 
+# want to work on further scripts. The documentation is good enough.
+#
+
+: ${TCBUILD_YAML=tcbuild.yaml}
+
+if [ ! -f $TCBUILD_YAML ] ; then
+	echo "Please make sure $TCBUILD_YAML exist, or provide the desired file in the TCBUILD_YAML environment variable"
+	exit 1
+fi
 
 if [ "$#" -lt "1" ] ; then
 	echo "Please provide your output directory as a parameter"
@@ -18,10 +34,10 @@ if [ -d $outdir ] ; then
 	exit 1
 fi
 
-if grep -q "local: output_directory" tcbuild.yaml ; then
-	sed -i "s|local: output_directory|local: $outdir|" tcbuild.yaml
+if grep -q "local: output_directory" $TCBUILD_YAML ; then
+	sed -i "s|local: output_directory|local: $outdir|" $TCBUILD_YAML
 else
-	echo -e "\x1b[33mYou probably already modified the tcbuild.yaml file so we assume you know what you are doing. You are welcome to modify this script and parse the output: local: <...> section and \"sed\" it yourself\x1b[0m"
+	echo -e "\x1b[33mYou probably already modified the tcbuild.yaml file at $TCBUILD_YAML so we assume you know what you are doing. You are welcome to modify this script and parse the output: local: <...> section and \"sed\" it yourself\x1b[0m"
 	exit 1
 fi
 
@@ -31,7 +47,7 @@ shopt -s expand_aliases
 
 echo -e "\x1b[32mStarting to build...\x1b[0m"
 
-if torizoncore-builder build ; then
+if torizoncore-builder build --file ${TCBUILD_YAML} ; then
 	echo -e "\x1b[32mBuild succeeded.\x1b[0m"
 
 	echo "Updating image with assets..."
