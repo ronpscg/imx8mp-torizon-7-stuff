@@ -1,0 +1,28 @@
+services:
+  c_dynamic:
+    device_cgroup_rules:
+      # /dev/fb*
+      - c 29:* rmw
+      # /dev/input/*
+      - c 13:* rmw
+    entrypoint: /artifacts/c/fb
+    command: timed
+    image: ghcr.io/ronpscg/fbdev-evdev-simple-test-apps/arm64/fbdev-simple-test-arm64-app-run-dynamic:ci-dev
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - /dev:/dev
+
+  rust_static_input_event:
+    device_cgroup_rules:
+      # /dev/fb*
+      - c 29:* rmw
+      # /dev/input/*
+      - c 13:* rmw
+    entrypoint: /artifacts/rust/fb
+    command: --input /dev/input/event2
+    image: ghcr.io/ronpscg/fbdev-evdev-simple-test-apps/arm64/fbdev-simple-test-arm64-app-run-static:ci-dev
+    restart: unless-stopped
+    tty: true
+    volumes: 
+      - /dev:/dev
