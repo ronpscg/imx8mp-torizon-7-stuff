@@ -105,8 +105,8 @@ This is fully explained in [this short video](https://www.youtube.com/watch?v=_d
 Assume the docker-compose.chromium-kiosk.yml example, and a particular torizon version, either from Toradex, or build with the Yocto Project.
 The cache materials can be added as follows:
 ```
-torizoncore-builder bundle --platform linux/arm64 containers/docker-compose/docker-compose.chromium-kiosk.yml ^C
-(reverse-i-search)`wget': wget https://tezi.toradex.com/artifactory/torizoncore-oe-prerelease-frankfurt/scarthgap-7.x.y/nightly/209/verdin-imx8mp/torizon/torizon-docker/oedeploy/torizon-docker-verdin-imx8mp-Tezi_7.3.0-devel-20250429+build.209.tar
+torizoncore-builder bundle --platform linux/arm64 containers/docker-compose/docker-compose.chromium-kiosk.yml
+wget https://tezi.toradex.com/artifactory/torizoncore-oe-prerelease-frankfurt/scarthgap-7.x.y/nightly/209/verdin-imx8mp/torizon/torizon-docker/oedeploy/torizon-docker-verdin-imx8mp-Tezi_7.3.0-devel-20250429+build.209.tar
 ```
 
 Then you can of course move them to a folder of your own, and make sure your `tcbuild.yml` file points to the right places.
@@ -120,6 +120,24 @@ An example template file is available, and you can build it (as in the video) us
 ```
 torizoncore-builder build --file tcbuild-templates/tcbuild.offline.containers_dtbs_kernelcmdline.yaml
 ```
+
+## Using your own container registries and your own custom docker images
+In order to bundle your own containers, you have to put them in registries. If you are working alone, you can use the local builds on your host and that is fine.
+However, if you want to, for example use [ghcr.io] hosted containers, you have to:
+- Build and push the containers them yourself
+- Login to the container registry and get them. Since the build process here uses DIND (Docker in Docker), it needs to know how to login and to which registry.
+
+An example, to build such a bundle is:
+```
+# $CR_PAT is a github classic Personal Access Token
+torizoncore-builder bundle --platform linux/arm64 containers/docker-compose/docker-compose.fbdev-simple-test.yml    --bundle-directory caches_dir/bundle --login-to ghcr.io ronpscg $CR_PAT
+```
+
+You can of course select other docker compose files as well, and create the _bundle_ directory directly (we do trust you to know to handle the renames, should you need such). For example, you can create a bundle that requires docker login to another repository:
+The equivalents to `--login to <registry> <username> <password/token>` and `--platform linux/arm64` are easily indentifiable in the `_tcbuild.yml_ file, and are not listed here.
+
+### Note about private container registries
+At the time of writing, the repo I showed in this example is private, so login is essential. If I find the time to create something without credentials (and if it is possible? I am not sure it is even for the public packages, but I have not tried that), I will update this comment line.
 
 
 ## Deploying the image
