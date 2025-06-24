@@ -20,7 +20,8 @@ services:
       # /dev/input/*
       - c 13:* rmw
     entrypoint: /artifacts/rust/fb
-    command: --input /dev/input/event2
+    # command: --input /dev/input/event2 # may not be consistent upon boots without udev rules
+    command: --input /dev/input/by-id/usb-WaveShare_WS170120-event-if00  # this is very specific, and is yet another example (older videos/demos on the Verdin Development board had some i2c touch devices)
     image: ghcr.io/ronpscg/fbdev-evdev-simple-test-apps/arm64/fbdev-simple-test-arm64-app-run-static:ci-dev
     restart: unless-stopped
     tty: true
