@@ -1,0 +1,50 @@
+#
+# This container runs glmark2 using Wayland and not requiring root privileges.
+# It shows an example of using your own container registry (GitHub Container Registry in this case).
+#
+services:
+  weston:
+    image: torizon/weston-imx8:stable-rc
+    network_mode: host
+    cap_add:
+    - CAP_SYS_TTY_CONFIG
+    device_cgroup_rules:
+    - c 4:0 rmw
+    - c 4:1 rmw
+    - c 4:7 rmw
+    - c 13:* rmw
+    - c 226:* rmw
+    - c 199:0 rmw
+    - c 253:* rmw
+    - c 10:253 rmw
+    environment:
+    - ACCEPT_FSL_EULA=1      
+    volumes:
+    - source: /tmp
+      target: /tmp
+      type: bind
+    - source: /dev
+      target: /dev
+      type: bind
+    - source: /run/udev
+      target: /run/udev
+      type: bind
+  glmark2-tests-nonroot-wayland:
+    image: ghcr.io/ronpscg/torizon-base-container-images/imx8mp.torizon-wayland-client-non-root-glmark2-tests:stable-rc
+    entrypoint: glmark2-es2-wayland
+    device_cgroup_rules:
+    - c 81:* rmw
+    - c 199:* rmw
+    - c 226:* rmw
+    - c 234:* rmw
+    - c 235:* rmw
+    - c 253:* rmw
+    restart: unless-stopped
+    security_opt:
+    - seccomp=unconfined
+    shm_size: 64mb
+    volumes:
+    - /tmp:/tmp
+    - /var/run/dbus:/var/run/dbus
+    - /dev:/dev
+    - /dev/galcore:/dev/galcore      
