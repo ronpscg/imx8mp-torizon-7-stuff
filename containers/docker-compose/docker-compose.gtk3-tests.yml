@@ -14,7 +14,7 @@ services:
     environment:
     - ACCEPT_FSL_EULA=1
     - HEAD=LVDS-1
-    image: torizon/weston-imx8@
+    image: torizon/weston-imx8:stable-rc
     network_mode: host
     volumes:
     - source: /tmp
