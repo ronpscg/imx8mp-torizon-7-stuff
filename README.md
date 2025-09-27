@@ -189,6 +189,18 @@ Others are welcome to contribute, I would do it later but I don't want to spend 
     
 If you want to use it as is, in a CI/CD flow, the easiest thing for you to do would be to just move output_directory after every build, and use output_directory as the target folder in the build you are working on.
 
+## More build examples that bundle, build offline, serve images and run TEZI
+There are quite a few helper scripts at  *exampleproduct-dev-host-helper-scripts/* and you are encouraged to observe them. It is better to do each activity separately, but
+combining everything can be done, as shown in the following examples:
+```
+BUILD_BUNDLE=false BUILD_PRODUCT_NAME=exampleproduct.1 ./exampleproduct-dev-host-helper-scripts/build-serve-and-flash-image.sh
+```
+
+```
+BUILD_BUNDLE=true BUILD_PRODUCT_NAME=exampleproduct.3 ./exampleproduct-dev-host-helper-scripts/build-serve-and-flash-image.sh
+```
+
+Please follow carefully the output of those build scripts, and the comments in the scripts themselves.
 
 ## torizoncore builder container and reproducibility
 
